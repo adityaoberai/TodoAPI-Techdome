@@ -32,7 +32,7 @@ namespace TodoAPI.Controllers
         {
             if (user.Email == null || user.Email == String.Empty)
             {
-                return BadRequest(new { message = "User name needs to entered" });
+                return BadRequest(new { message = "Email address needs to entered" });
             }
             else if (user.Password == null || user.Password == String.Empty)
             {
@@ -43,7 +43,7 @@ namespace TodoAPI.Controllers
             user.Token = "Bearer " + user.Token;
             if (user.Token == null || user.Token == String.Empty)
             {
-                return BadRequest(new { message = "User name or password is incorrect" });
+                return BadRequest(new { message = "Email address or password is incorrect" });
             }
 
             return Ok(user);
