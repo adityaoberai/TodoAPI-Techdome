@@ -18,7 +18,7 @@ namespace TodoAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasKey(u => u.UserName);
+                .HasKey(u => u.Email);
         }
     }
 }

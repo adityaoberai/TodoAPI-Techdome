@@ -30,7 +30,7 @@ namespace TodoAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] User user)
         {
-            if (user.UserName == null || user.UserName == String.Empty)
+            if (user.Email == null || user.Email == String.Empty)
             {
                 return BadRequest(new { message = "User name needs to entered" });
             }
@@ -39,7 +39,7 @@ namespace TodoAPI.Controllers
                 return BadRequest(new { message = "Password needs to entered" });
             }
 
-            user = await LoginUser(user.UserName, user.Password);
+            user = await LoginUser(user.Email, user.Password);
             user.Token = "Bearer " + user.Token;
             if (user.Token == null || user.Token == String.Empty)
             {
@@ -56,32 +56,26 @@ namespace TodoAPI.Controllers
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
             }
-            catch(ArgumentException e)
+            catch(ArgumentException ex)
             {
                 return BadRequest(new { message = "User already exists" });
             }
 
-            user = await LoginUser(user.UserName, user.Password);
+            user = await LoginUser(user.Email, user.Password);
             user.Token = "Bearer " + user.Token;
-            if (user.Token == null || user.Token == String.Empty)
-            {
-                return BadRequest(new { message = "User name or password is incorrect" });
-            }
-
             return Ok(user);
         }
 
-        public async Task<User> LoginUser(string UserName, string Password)
+        public async Task<User> LoginUser(string Email, string Password)
         {
-            User user = await _context.Users.FindAsync(UserName);
-
-            // return null if user not found
+            User user = await _context.Users.FindAsync(Email);
+            // Return null if User not found
             if (user == null)
             {
                 return null;
             }
 
-            // authentication successful so generate jwt token
+            // Generate JWT Token if user successfully found
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Startup.JWTSecret);
 
