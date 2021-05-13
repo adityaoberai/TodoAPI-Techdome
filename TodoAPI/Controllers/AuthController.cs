@@ -51,6 +51,15 @@ namespace TodoAPI.Controllers
 
         public async Task<ActionResult<TodoItem>> Register([FromBody] User user)
         {
+            if (user.Email == null || user.Email == String.Empty)
+            {
+                return BadRequest(new { message = "Email address needs to entered" });
+            }
+            else if (user.Password == null || user.Password == String.Empty)
+            {
+                return BadRequest(new { message = "Password needs to entered" });
+            }
+
             try
             {
                 _context.Users.Add(user);
@@ -62,7 +71,6 @@ namespace TodoAPI.Controllers
             }
 
             user = await LoginUser(user.Email, user.Password);
-            user.Token = "Bearer " + user.Token;
             return Ok(user);
         }
 
