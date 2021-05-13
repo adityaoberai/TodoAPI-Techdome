@@ -1,2 +1,4 @@
-./TodoAPI/obj
-./TodoAPI/bin
+TodoAPI/obj
+TodoAPI/bin
+.vs
+.vscode
