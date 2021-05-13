@@ -40,8 +40,7 @@ namespace TodoAPI.Controllers
             }
 
             user = await LoginUser(user.Email, user.Password);
-            user.Token = "Bearer " + user.Token;
-            if (user.Token == null || user.Token == String.Empty)
+            if (user == null)
             {
                 return BadRequest(new { message = "Email address or password is incorrect" });
             }
@@ -67,7 +66,7 @@ namespace TodoAPI.Controllers
             }
             catch(ArgumentException ex)
             {
-                return BadRequest(new { message = "User already exists" });
+                return BadRequest(new { message = $"User already exists\n\n{ex.Message}" });
             }
 
             user = await LoginUser(user.Email, user.Password);
@@ -78,7 +77,7 @@ namespace TodoAPI.Controllers
         {
             User user = await _context.Users.FindAsync(Email);
             // Return null if User not found
-            if (user == null)
+            if (user == null || Password.Equals(user.Password)==false)
             {
                 return null;
             }
