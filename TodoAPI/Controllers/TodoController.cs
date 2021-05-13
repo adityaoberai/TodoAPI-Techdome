@@ -22,7 +22,7 @@ namespace TodoAPI.Controllers
             _context = context;
         }
 
-        // GET: Todo/getall
+        // GET: /getall
         [Authorize(Roles = "User,Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> getall()
@@ -30,7 +30,7 @@ namespace TodoAPI.Controllers
             return await _context.TodoItems.ToListAsync();
         }
 
-        // GET: Todo/get/1
+        // GET: /get/1
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> get(long id)
@@ -45,16 +45,13 @@ namespace TodoAPI.Controllers
             return todoItem;
         }
 
-        // PUT: Todo/put/5
+        // PUT: /put/1
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> put(long id, TodoItem todoItem)
         {
-            if (id != todoItem.Id)
-            {
-                return BadRequest();
-            }
+            todoItem.Id = id; // Ensuring the [action]/{?id} is used
 
             _context.Entry(todoItem).State = EntityState.Modified;
 
@@ -74,19 +71,16 @@ namespace TodoAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok($"Todo {id} updated successfully!");
         }
 
-        // POST: Todo/create/1
+        // POST: /create/1
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPost("{id}")]
         public async Task<ActionResult<TodoItem>> create(long id, TodoItem todoItem)
         {
-            if (id != todoItem.Id)
-            {
-                return BadRequest();
-            }
+            todoItem.Id = id; // Ensuring the [action]/{?id} is used
 
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
@@ -94,7 +88,7 @@ namespace TodoAPI.Controllers
             return CreatedAtAction(nameof(get), new { id = todoItem.Id }, todoItem);
         }
 
-        // DELETE: Todo/delete/5
+        // DELETE: /delete/1
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> delete(long id)
@@ -108,7 +102,7 @@ namespace TodoAPI.Controllers
             _context.TodoItems.Remove(todoItem);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Todo {id} deleted successfully!");
         }
 
         private bool TodoItemExists(long id)
