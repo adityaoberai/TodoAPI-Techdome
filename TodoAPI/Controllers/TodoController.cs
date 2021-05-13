@@ -51,10 +51,7 @@ namespace TodoAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> put(long id, TodoItem todoItem)
         {
-            if (id != todoItem.Id)
-            {
-                return BadRequest();
-            }
+            todoItem.Id = id;
 
             _context.Entry(todoItem).State = EntityState.Modified;
 
@@ -74,7 +71,7 @@ namespace TodoAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok($"Todo {id} updated successfully!");
         }
 
         // POST: Todo/create/1
@@ -108,7 +105,7 @@ namespace TodoAPI.Controllers
             _context.TodoItems.Remove(todoItem);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Todo {id} deleted successfully!");
         }
 
         private bool TodoItemExists(long id)
