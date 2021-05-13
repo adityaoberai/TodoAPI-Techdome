@@ -181,6 +181,23 @@ The `AuthController` contains the registration and login APIs we are using to ge
 
         *Note: Token returned will be different from the example*
 
+#### Roles
+
+Each user can have 1 of 2 roles:
+
+* User
+* Admin
+
+Here is the access each role has to the **TodoController* APIs:
+
+| Role | APIs Accessible |
+| - | - |
+| User | `/getall` API only |
+| Admin | All TodoController APIs |
+
+This information is claimed in the JWT Token. 
+Failure to add the JWT Token as a Bearer Token in the **Authorization** header will result in a `401 Unauthorized` error
+
 ## Models
 
 The 2 models used in the API are:
@@ -195,10 +212,15 @@ The 2 models used in the API are:
 * In C#
 
 ```csharp
-public class TodoItem
+public class User
 {
-    public long Id { get; set; }
-    public string TaskToDo { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public bool IsActive { get; set; }
+    public string Role { get; set; }
+    public string Password { get; set; }
+    public string Token { get; set; }
 }
 ```
 
@@ -224,16 +246,11 @@ public class TodoItem
 
 * In C#
 
- ```csharp
-public class User
+```csharp
+public class TodoItem
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-    public bool IsActive { get; set; }
-    public string Role { get; set; }
-    public string Password { get; set; }
-    public string Token { get; set; }
+    public long Id { get; set; }
+    public string TaskToDo { get; set; }
 }
 ```
 
